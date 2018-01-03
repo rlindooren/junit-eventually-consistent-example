@@ -29,7 +29,7 @@ public class EventuallyConsistentTest {
                 // Response response = myWebservice.retrieveSomething(id);
                 // assertThat(response.getSomething().getName()).isEqualTo("foo");
                 //
-                // Just make sure that you retrieve the value within this block (not outside otherwise it will not be retried)
+                // Just make sure that you retrieve the value within this command (not outside otherwise it will not be retried)
             });
         } catch (Throwable t) {
             t.printStackTrace();

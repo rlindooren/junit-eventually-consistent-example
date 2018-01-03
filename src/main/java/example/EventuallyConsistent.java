@@ -6,17 +6,17 @@ import java.time.Instant;
 public class EventuallyConsistent {
 
     /**
-     * @param maxDuration the duration during which the function/block will be retried after it fails exceptionally
-     * @param block       the logic that fails exceptionally while its assertions are not successful
+     * @param maxDuration the duration during which the command will be retried after it fails exceptionally
+     * @param command       the logic that fails exceptionally while its assertions are not successful
      */
-    public static void eventually(Duration maxDuration, Runnable block) {
+    public static void eventually(Duration maxDuration, Runnable command) {
         final Instant start = Instant.now();
         final Instant max = start.plus(maxDuration);
 
         boolean failed;
         do {
             try {
-                block.run();
+                command.run();
                 failed = false;
             } catch (Throwable t) {
                 failed = true;
