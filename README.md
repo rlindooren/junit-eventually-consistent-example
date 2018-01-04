@@ -43,44 +43,22 @@ public class EventuallyConsistentTest {
 
     @Test
     public void testEventuallySucceeds() {
-        final Instant start = Instant.now();
-        try {
-            eventually(Duration.ofSeconds(10), () -> {
-                // Expected result (true) is returned only after 3 seconds
-                final boolean success = Instant.now().isAfter(start.plus(Duration.ofSeconds(3))) ? true : false;
-                
-                // This will fail exceptionally (in the form of a ComparisonFailure)
-                // as long as the result doesn't have the expected value yet
-                assertThat(success).isEqualTo(true);
-                
-                // This could also be a call to a database, webservice, you-name-it, that takes a while to be updated
-                // For example:
-                //
-                // Response response = myWebservice.retrieveSomething(id);
-                // assertThat(response.getSomething().getName()).isEqualTo("foo");
-                //
-                // Just make sure that you retrieve the value within this command (not outside otherwise it will not be retried)
-            });
-        } catch (Throwable t) {
-            t.printStackTrace();
-            fail("Should have succeeded after ~ 3 seconds");
-        }
-    }
-}
-```
-
-The surrounding try-catch in the example above isn't required:
-```java
-import static example.EventuallyConsistent.eventually;
-public class EventuallyConsistentTest {
-
-    @Test
-    public void testEventuallySucceeds() {
         eventually(Duration.ofSeconds(10), () -> {
-            // Just make sure that you retrieve the value within this command (not outside otherwise it will not be retried)
+            // The value is retrieved withing the command block (not outside otherwise it will not be retried)
             Response response = myWebservice.retrieveSomething(id);
             assertThat(response.getSomething().getName()).isEqualTo("foo");
         });
     }
+    
+    @Test
+    public void thisWillNotWork() {
+        // This is incorrect! The result is retrieved only once and not retried to become consistent.
+        Response response = myWebservice.retrieveSomething(id);
+        eventually(Duration.ofSeconds(10), () ->
+            assertThat(response.getSomething().getName()).isEqualTo("foo")
+        );
+    }
 }
 ```
+See the test class for runnable examples: [EventuallyConsistentTest.java](src/test/java/example/EventuallyConsistentTest.java)
+
