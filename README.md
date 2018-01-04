@@ -2,6 +2,7 @@ An example of how to give assertions some time to succeed.
 
 This can be useful when testing, for example, a webservice or database that is updated asynchrounously and therefore takes a while to become consistent.
 
+Implementation:
 ```java
 public class EventuallyConsistent {
 
@@ -35,7 +36,7 @@ public class EventuallyConsistent {
     }
 }
 ```
-
+Example usage:
 ```java
 import static example.EventuallyConsistent.eventually;
 public class EventuallyConsistentTest {
