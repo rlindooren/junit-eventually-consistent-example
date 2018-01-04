@@ -44,7 +44,7 @@ public class EventuallyConsistentTest {
     @Test
     public void testEventuallySucceeds() {
         eventually(Duration.ofSeconds(10), () -> {
-            // The value is retrieved withing the command block (not outside otherwise it will not be retried)
+            // The value should be retrieved within the command block (not outside otherwise it will not be retried)
             Response response = myWebservice.retrieveSomething(id);
             assertThat(response.getSomething().getName()).isEqualTo("foo");
         });
