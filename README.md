@@ -68,3 +68,19 @@ public class EventuallyConsistentTest {
     }
 }
 ```
+
+The surrounding try-catch in the example above isn't required:
+```java
+import static example.EventuallyConsistent.eventually;
+public class EventuallyConsistentTest {
+
+    @Test
+    public void testEventuallySucceeds() {
+        eventually(Duration.ofSeconds(10), () -> {
+            // Just make sure that you retrieve the value within this command (not outside otherwise it will not be retried)
+            Response response = myWebservice.retrieveSomething(id);
+            assertThat(response.getSomething().getName()).isEqualTo("foo");
+        });
+    }
+}
+```
